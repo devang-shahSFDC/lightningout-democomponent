@@ -29,7 +29,7 @@ app.use('/home', routesHome);
 app.set('view engine', 'ejs');
 
 /*Allow CORS*/
-app.use(function (req, res, next) {
+/* app.use(function (req, res, next) {
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization,X-Authorization');
@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Max-Age', '1000');
 
   next();
-});
+}); */
 
 
 app.get('/', cors(), function (req, res) {
