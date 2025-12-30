@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     
+  </head>
+  <body class="slds">
+    <header>
+    </header>
+    <main>
+      <div >
+        <p>Lightning Out Component </p>
+        <div id="leaderboard"></div>
+          </div>
+      </main>
+        <footer>
+        </footer>
+        <script src="https://ffaizi-20190610-demo.lightning.force.com/lightning/lightning.out.js"></script>
+        <script>
+          var url = "<%= ouathLightningURL %>";
+          var token = "<%= oauthtoken %>";
+          console.log(url);
+          console.log(token);
+            $Lightning.use("c:<%= appName %>", function() {
+                  $Lightning.createComponent("c:<%= cmpName %>", {},
+                     "leaderboard",
+                      function(cmp) {
+                         // do some stuff
+                      });
+            },url,token );
+        </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+{
+    "name": "Lightning Out Demo",
+    "description": "A Node.js app using Express 4",
+    "repository": "https://github.com/gleelamohan/lightningout-democomponent",
+    "logo": "https://node-js-sample.herokuapp.com/node.png",
+    "keywords": ["node", "express", "static"],
+    "env": {
+        "CLIENT_ID": {
+            "value": ""
+        },
+        "CLIENT_SECRET": {
+          "value": ""
+        },
+        "CLASSIC_DOMAIN_URI": {
+            "value": ""
+        },
+        "LIGHTNING_DOMAIN_URI": {
+          "value": ""
+        },
+        "USERNAME": {
+            "value": ""
+        },
+        "PASSWORD": {
+          "value": ""
+        },
+        "LightningAppName": {
+            "value": "ContacViewerLightningApp"
+        },
+        "LightningCmpName": {
+          "value": "ContacViewerCmp"
+        }
+      }
+  }
