@@ -18,8 +18,11 @@
         <script>
           var url = "<%= ouathLightningURL %>";
           var token = "<%= oauthtoken %>";
+          console.log('gg1');
           console.log(url);
           console.log(token);
+
+          /*
             $Lightning.use("c:<%= appName %>", function() {
                   $Lightning.createComponent("c:<%= cmpName %>", {},
                      "leaderboard",
@@ -27,6 +30,19 @@
                          // do some stuff
                       });
             },url,token );
+          */
+          $Lightning.use(
+            "c:ContacViewerLightningApp",   // MUST EXIST
+            function() {
+              $Lightning.createComponent(
+                "c:ContacViewerCmp",
+                {},
+                "lightning"
+              );
+            },
+            "https://storm-7d8b82271e33f2.lightning.force.com"
+          },url,token );
+
         </script>
   </body>
 </html>
