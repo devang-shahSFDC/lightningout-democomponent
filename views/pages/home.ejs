@@ -23,7 +23,7 @@
           console.log(url);
           console.log(token);
            console.log('gg19');
-          
+          /*
             $Lightning.use("c:<%= appName %>", function() {
                   $Lightning.createComponent("c:<%= cmpName %>", {},
                      "leaderboard",
@@ -31,7 +31,18 @@
                          // do some stuff
                       });
             },url,token );
-          
+          */
+        $Lightning.use(
+          "c:ContacViewerLightningApp",      // Lightning app name
+          function () {
+            $Lightning.createComponent(
+              "c:ContactViewer",             // Component name
+              {},
+              "lightning-container"
+            );
+          },
+          "https://storm-7d8b82271e33f2.lightning.force.com"
+        );
 
         </script>
   </body>
