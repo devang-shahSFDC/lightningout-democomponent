@@ -43,11 +43,11 @@ app.use(function (req, res, next) {
 
 app.get('/', cors(), function (req, res) {
   const formData = new FormData();
-  formData.append('grant_type', 'password');
+  formData.append('grant_type', 'client_credentials');
   formData.append('client_id', consumerId);
   formData.append('client_secret', consumerSecret);
-  formData.append('username', username);
-  formData.append('password', password);
+  //formData.append('username', username);
+  //formData.append('password', password);
 
   (async () => {
     try {
