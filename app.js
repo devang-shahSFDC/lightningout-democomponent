@@ -18,9 +18,6 @@ var app = express();
 
 app.use(cors());
 
-
-
-
 // Require Routes js
 var routesHome = require('./routes/home');
 
@@ -45,13 +42,15 @@ app.use(function (req, res, next) {
 
 
 app.get('/', cors(), function (req, res) {
+
+  
   const formData = new FormData();
   formData.append('grant_type', 'client_credentials');
   formData.append('client_id', consumerId);
   formData.append('client_secret', consumerSecret);
   //formData.append('username', username);
   //formData.append('password', password);
-
+  
   (async () => {
     try {
       const res1 = await fetch(authtokenUrl, {
@@ -70,23 +69,22 @@ app.get('/', cors(), function (req, res) {
       console.error(err);
     }
   })();
+
+
+
+
+
+  
 });
 
 
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const axios = require("axios");
-
-// ===== CONFIG =====
 const CONSUMER_KEY = "3MVG9uq9ANVdsbAWAMrxNE2SBpuQKe4i3X5c8bRBRjLR_oEP2yJCICdm9S_yDDP_k10RZVvCazlfEXLdP4uXK";           // iss
 const USERNAME = "sivakrishnareddy.b.db237faa28@salesforce.com";                // sub
 const LOGIN_URL = "https://login.salesforce.com";   // aud
-// sandbox → https://test.salesforce.com
 const PRIVATE_KEY_PATH = "./server.key";            // RSA private key
-
-// ==================
-
-// Read private key
 const privateKey = fs.readFileSync(PRIVATE_KEY_PATH, "utf8");
 
 // Create JWT
@@ -114,13 +112,11 @@ async function getAccessToken() {
   params.append("assertion", assertion);
 
   const tokenUrl = `${LOGIN_URL}/services/oauth2/token`;
-
   const response = await axios.post(tokenUrl, params, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   });
-
   return response.data;
 }
 
@@ -131,7 +127,11 @@ async function getAccessToken() {
     console.log("OAuth Token Response:\n", tokenResponse);
     console.log("OAuth Token Response:\n", tokenResponse.access_token);
     app.locals.oauthtoken = tokenResponse.access_token;
+    app.locals.lightningEndPointURI = lightningEndPointURI;
+    app.locals.appName = appName;
+    app.locals.cmpName = cmpName;
     console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
+    //res.redirect('/home');
   } catch (err) {
     if (err.response) {
       console.error("Salesforce Error:", err.response.data);
@@ -140,11 +140,6 @@ async function getAccessToken() {
     }
   }
 })();
-
-
-
-
-
 
 // Served Localhost
 console.log('Served: http://localhost:' + port);
