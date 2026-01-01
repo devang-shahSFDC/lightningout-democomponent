@@ -13,71 +13,6 @@ var username = process.env.USERNAME;
 var password = process.env.PASSWORD; 
 var appName =  process.env.LightningAppName; 
 var cmpName =  process.env.LightningCmpName; 
-
-var app = express();
-
-app.use(cors());
-
-// Require Routes js
-var routesHome = require('./routes/home');
-
-// Serve static files
-app.use(express.static(__dirname + '/public'));
-
-app.use('/home', routesHome);
-
-app.set('view engine', 'ejs');
-
-/*Allow CORS*/
-app.use(function (req, res, next) {
-
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization,X-Authorization');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Expose-Headers', 'X-Api-Version, X-Request-Id, X-Response-Time');
-  res.setHeader('Access-Control-Max-Age', '1000');
-
-  next();
-}); 
-
-
-app.get('/', cors(), function (req, res) {
-
-  
-  const formData = new FormData();
-  formData.append('grant_type', 'client_credentials');
-  formData.append('client_id', consumerId);
-  formData.append('client_secret', consumerSecret);
-  //formData.append('username', username);
-  //formData.append('password', password);
-  
-  (async () => {
-    try {
-      const res1 = await fetch(authtokenUrl, {
-        method: 'POST',
-        body: formData
-      });
-
-      const user = await res1.json();
-
-      app.locals.oauthtoken = user.access_token;
-      app.locals.lightningEndPointURI = lightningEndPointURI;
-      app.locals.appName = appName;
-      app.locals.cmpName = cmpName;
-      //res.redirect('/home');
-    } catch (err) {
-      console.error(err);
-    }
-  })();
-
-
-
-
-
-  
-});
-
-
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const axios = require("axios");
@@ -87,7 +22,6 @@ const LOGIN_URL = "https://login.salesforce.com";   // aud
 const PRIVATE_KEY_PATH = "./server.key";            // RSA private key
 const privateKey = fs.readFileSync(PRIVATE_KEY_PATH, "utf8");
 
-// Create JWT
 function generateJWT() {
   const now = Math.floor(Date.now() / 1000);
   const payload = {
@@ -120,6 +54,84 @@ async function getAccessToken() {
   return response.data;
 }
 
+var app = express();
+
+app.use(cors());
+
+// Require Routes js
+var routesHome = require('./routes/home');
+
+// Serve static files
+app.use(express.static(__dirname + '/public'));
+
+app.use('/home', routesHome);
+
+app.set('view engine', 'ejs');
+
+/*Allow CORS*/
+app.use(function (req, res, next) {
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization,X-Authorization');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Expose-Headers', 'X-Api-Version, X-Request-Id, X-Response-Time');
+  res.setHeader('Access-Control-Max-Age', '1000');
+
+  next();
+}); 
+
+
+app.get('/', cors(), function (req, res) {
+  
+  const formData = new FormData();
+  formData.append('grant_type', 'client_credentials');
+  formData.append('client_id', consumerId);
+  formData.append('client_secret', consumerSecret);
+  //formData.append('username', username);
+  //formData.append('password', password);
+  
+  (async () => {
+
+    try {
+      const tokenResponse = await getAccessToken();
+      console.log("OAuth Token Response:\n", tokenResponse);
+      console.log("OAuth Token Response:\n", tokenResponse.access_token);
+      app.locals.oauthtoken = tokenResponse.access_token;
+      app.locals.lightningEndPointURI = lightningEndPointURI;
+      app.locals.appName = appName;
+      app.locals.cmpName = cmpName;
+      console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
+      //res.redirect('/home');
+    } catch (err) {
+      if (err.response) {
+        console.error("Salesforce Error:", err.response.data);
+      } else {
+        console.error("Error:", err.message);
+      }
+    }
+
+
+
+    try {
+      const res1 = await fetch(authtokenUrl, {
+        method: 'POST',
+        body: formData
+      });
+
+      const user = await res1.json();
+
+      app.locals.oauthtoken = user.access_token;
+      app.locals.lightningEndPointURI = lightningEndPointURI;
+      app.locals.appName = appName;
+      app.locals.cmpName = cmpName;
+      res.redirect('/home');
+    } catch (err) {
+      console.error(err);
+    }
+  })();
+  
+});
+
 // Run
 (async () => {
   try {
@@ -140,6 +152,7 @@ async function getAccessToken() {
     }
   }
 })();
+
 
 // Served Localhost
 console.log('Served: http://localhost:' + port);
