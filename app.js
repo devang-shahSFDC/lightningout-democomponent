@@ -64,7 +64,7 @@ app.get('/', cors(), function (req, res) {
       app.locals.lightningEndPointURI = lightningEndPointURI;
       app.locals.appName = appName;
       app.locals.cmpName = cmpName;
-      res.redirect('/home');
+      //res.redirect('/home');
     } catch (err) {
       console.error(err);
     }
