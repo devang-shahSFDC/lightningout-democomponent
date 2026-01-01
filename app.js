@@ -18,6 +18,9 @@ var app = express();
 
 app.use(cors());
 
+
+
+
 // Require Routes js
 var routesHome = require('./routes/home');
 
@@ -68,6 +71,80 @@ app.get('/', cors(), function (req, res) {
     }
   })();
 });
+
+
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const axios = require("axios");
+
+// ===== CONFIG =====
+const CONSUMER_KEY = "3MVG9uq9ANVdsbAWAMrxNE2SBpuQKe4i3X5c8bRBRjLR_oEP2yJCICdm9S_yDDP_k10RZVvCazlfEXLdP4uXK";           // iss
+const USERNAME = "sivakrishnareddy.b.db237faa28@salesforce.com";                // sub
+const LOGIN_URL = "https://login.salesforce.com";   // aud
+// sandbox → https://test.salesforce.com
+const PRIVATE_KEY_PATH = "./server.key";            // RSA private key
+
+// ==================
+
+// Read private key
+const privateKey = fs.readFileSync(PRIVATE_KEY_PATH, "utf8");
+
+// Create JWT
+function generateJWT() {
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iss: CONSUMER_KEY,
+    sub: USERNAME,
+    aud: LOGIN_URL,
+    exp: now + 180 // max 5 minutes
+  };
+
+  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
+}
+
+// Exchange JWT for access token
+async function getAccessToken() {
+  const assertion = generateJWT();
+
+  const params = new URLSearchParams();
+  params.append(
+    "grant_type",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer"
+  );
+  params.append("assertion", assertion);
+
+  const tokenUrl = `${LOGIN_URL}/services/oauth2/token`;
+
+  const response = await axios.post(tokenUrl, params, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  });
+
+  return response.data;
+}
+
+// Run
+(async () => {
+  try {
+    const tokenResponse = await getAccessToken();
+    console.log("OAuth Token Response:\n", tokenResponse);
+    console.log("OAuth Token Response:\n", tokenResponse.access_token);
+    app.locals.oauthtoken = tokenResponse.access_token;
+    console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
+  } catch (err) {
+    if (err.response) {
+      console.error("Salesforce Error:", err.response.data);
+    } else {
+      console.error("Error:", err.message);
+    }
+  }
+})();
+
+
+
+
+
 
 // Served Localhost
 console.log('Served: http://localhost:' + port);
