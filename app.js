@@ -101,7 +101,7 @@ app.get('/', cors(), function (req, res) {
       app.locals.appName = appName;
       app.locals.cmpName = cmpName;
       console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
-      //res.redirect('/home');
+      res.redirect('/home');
     } catch (err) {
       if (err.response) {
         console.error("Salesforce Error:", err.response.data);
@@ -110,7 +110,7 @@ app.get('/', cors(), function (req, res) {
       }
     }
 
-
+    /*
 
     try {
       const res1 = await fetch(authtokenUrl, {
@@ -127,7 +127,7 @@ app.get('/', cors(), function (req, res) {
       res.redirect('/home');
     } catch (err) {
       console.error(err);
-    }
+    }*/
   })();
   
 });
