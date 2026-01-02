@@ -9,6 +9,8 @@
     <main>
       <div >
         <p>Lightning Out Component </p>
+        <button onclick="getSfToken()">Book Appointment</button>
+
         <div id="leaderboard"></div>
           </div>
           <div id="lightning-container" style="height: 600px; width: 50%; border: 1px solid #ccc;"></div>
@@ -21,46 +23,48 @@
           src="https://storm-7d8b82271e33f2.my.salesforce.com/lightning/lightning.out.latest/index.iife.prod.js">
         </script>
         <script>
-          var url = "<%= ouathLightningURL %>";
-          var token = "<%= oauthtoken %>"; 
-          //var token = "00DKB000001xMCd!ARAAQCLEHcs5reDik2z42xILPZ4uKncjw8NIzYditPAGRms3v3pPjZ7W088O.EPdudtzIAN1I0FSszzsbi7gmREoEUzpODon"; 
-          console.log('gg1');
-          console.log(url);
-          console.log(token);
-           console.log('gg19');
+          async function getSfToken(){
 
-           const targetURL2 = 'https://storm-7d8b82271e33f2.my.salesforce.com/services/oauth2/singleaccess';
-           const response = await fetch(targetURL2, {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/x-www-form-urlencoded'
-               },
-               body: new URLSearchParams({
-                   'access_token': token,
-                   'retURL': '/lightning/lightning.out.latest/index.iife.prod.js' // Optional return context
-               })
-           });
+            var url = "<%= ouathLightningURL %>";
+            var token = "<%= oauthtoken %>"; 
+            //var token = "00DKB000001xMCd!ARAAQCLEHcs5reDik2z42xILPZ4uKncjw8NIzYditPAGRms3v3pPjZ7W088O.EPdudtzIAN1I0FSszzsbi7gmREoEUzpODon"; 
+            console.log('gg1');
+            console.log(url);
+            console.log(token);
+            console.log('gg19');
 
-           const data1 = await response.json();
-           frontDoorUrl = data1.frontdoor_uri;
-           console.log(data1);
+            const targetURL2 = 'https://storm-7d8b82271e33f2.my.salesforce.com/services/oauth2/singleaccess';
+            const response = await fetch(targetURL2, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'access_token': token,
+                    'retURL': '/lightning/lightning.out.latest/index.iife.prod.js' // Optional return context
+                })
+            });
+
+            const data1 = await response.json();
+            frontDoorUrl = data1.frontdoor_uri;
+            console.log(data1);
 
 
                 // --- STEP 3: DYNAMICALLY INJECT HTML ---
                 //out.textContent = '3. Loading Lightning App...';
 
-                // Create the App Wrapper
-                const appElement = document.createElement('lightning-out-application');
-                appElement.setAttribute('frontdoor-url', frontDoorUrl);
-                //appElement.setAttribute('components', 'c-lightning-out-flow');
-                appElement.setAttribute('components', 'c-service-appointment-booking');
+                  // Create the App Wrapper
+                  const appElement = document.createElement('lightning-out-application');
+                  appElement.setAttribute('frontdoor-url', frontDoorUrl);
+                  //appElement.setAttribute('components', 'c-lightning-out-flow');
+                  appElement.setAttribute('components', 'c-service-appointment-booking');
 
-                document.getElementById('lightning-container').appendChild(appElement);
+                  document.getElementById('lightning-container').appendChild(appElement);
 
-                const myCmp = document.createElement('c-service-appointment-booking');
-                /*if(campaignToken) {
-                    myCmp.setAttribute('campaign-token', campaignToken);
-                }*/
+                  const myCmp = document.createElement('c-service-appointment-booking');
+                  /*if(campaignToken) {
+                      myCmp.setAttribute('campaign-token', campaignToken);
+                  }*/
 
                 document.getElementById('lightning-container').appendChild(myCmp);
                 //out.textContent = 'Ready!';
@@ -88,7 +92,7 @@
           },
           "https://storm-7d8b82271e33f2.my.salesforce.com",token
         ); */
-
+        }
         </script>
   </body>
 </html>
