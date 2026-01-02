@@ -28,6 +28,7 @@ function generateJWT() {
     iss: CONSUMER_KEY,
     sub: USERNAME,
     aud: LOGIN_URL,
+    scope: "api full",
     exp: now + 180 // max 5 minutes
   };
 
