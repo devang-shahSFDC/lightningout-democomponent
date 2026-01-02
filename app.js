@@ -102,6 +102,38 @@ app.get('/', cors(), function (req, res) {
       app.locals.appName = appName;
       app.locals.cmpName = cmpName;
       console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
+
+
+      /*const response = await axios.post(tokenUrl, params, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      });*/
+
+      const targetURL2 = 'https://storm-7d8b82271e33f2.my.salesforce.com/services/oauth2/singleaccess';
+      const response = await fetch(targetURL2, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+              'access_token': token,
+              'retURL': '/lightning/lightning.out.latest/index.iife.prod.js' // Optional return context
+          })
+      });
+
+      const data1 = await response.json();
+      app.locals.FRONT_DOOR_URL = data1.frontdoor_uri;
+
+
+
+
+
+
+
+
+
+
       res.redirect('/home');
     } catch (err) {
       if (err.response) {

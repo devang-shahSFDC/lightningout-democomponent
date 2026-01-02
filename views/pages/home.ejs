@@ -27,12 +27,14 @@
 
             var url = "<%= ouathLightningURL %>";
             var token = "<%= oauthtoken %>"; 
+            var frontDoorUrl = "<%= FRONT_DOOR_URL %>";
             //var token = "00DKB000001xMCd!ARAAQCLEHcs5reDik2z42xILPZ4uKncjw8NIzYditPAGRms3v3pPjZ7W088O.EPdudtzIAN1I0FSszzsbi7gmREoEUzpODon"; 
             console.log('gg1');
             console.log(url);
             console.log(token);
+            console.log(frontDoorUrl);
             console.log('gg19');
-
+/*
             const targetURL2 = 'https://storm-7d8b82271e33f2.my.salesforce.com/services/oauth2/singleaccess';
             const response = await fetch(targetURL2, {
                 method: 'POST',
@@ -46,8 +48,8 @@
             });
 
             const data1 = await response.json();
-            frontDoorUrl = data1.frontdoor_uri;
-            console.log(data1);
+*/
+  
 
 
                 // --- STEP 3: DYNAMICALLY INJECT HTML ---
