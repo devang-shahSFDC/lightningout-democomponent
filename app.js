@@ -117,21 +117,14 @@ app.get('/', cors(), function (req, res) {
               'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: new URLSearchParams({
-              'access_token': token,
+              'access_token': app.locals.oauthtoken,
               'retURL': '/lightning/lightning.out.latest/index.iife.prod.js' // Optional return context
           })
       });
-
+  
       const data1 = await response.json();
+      console.log(data1);
       app.locals.FRONT_DOOR_URL = data1.frontdoor_uri;
-
-
-
-
-
-
-
-
 
 
       res.redirect('/home');
@@ -176,6 +169,23 @@ app.get('/', cors(), function (req, res) {
     app.locals.appName = appName;
     app.locals.cmpName = cmpName;
     console.log("app.locals.oauthtoken:\n", app.locals.oauthtoken);
+
+
+    const targetURL2 = 'https://storm-7d8b82271e33f2.my.salesforce.com/services/oauth2/singleaccess';
+    const response = await fetch(targetURL2, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            'access_token': app.locals.oauthtoken,
+            'retURL': '/lightning/lightning.out.latest/index.iife.prod.js' // Optional return context
+        })
+    });
+
+    const data1 = await response.json();
+    console.log(data1);
+    app.locals.FRONT_DOOR_URL = data1.frontdoor_uri;
     //res.redirect('/home');
   } catch (err) {
     if (err.response) {
